@@ -105,8 +105,14 @@ export const roomCreate = (name, maxcount, features1, features2, features3, feat
                   type: CREATE_ROOMS_REQUEST,
             })
 
+            const config = {
+                  headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("userInfo")).token}`,
+                  },
+            }
 
-            const { data } = await axios.post(`/api/rooms/createrooms`, { name, maxcount, features1, features2, features3, features4, features5, rentperday, imageUrl1, imageUrl2, imageUrl3, type, description })
+            const { data } = await axios.post(`/api/rooms/createrooms`, { name, maxcount, features1, features2, features3, features4, features5, rentperday, imageUrl1, imageUrl2, imageUrl3, type, description }, config)
 
             dispatch({
                   type: CREATE_ROOMS_SUCCESS,
