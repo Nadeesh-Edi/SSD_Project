@@ -48,7 +48,14 @@ app.use(xss());
 // Use express-mongo-sanitize middleware to sanitize user input for MongoDB
 app.use(mongoSanitize());
 
-app.use(cors())
+// Configure CORS to allow requests only from trusted domains
+app.use(
+  cors({
+    origin: 'http://localhost:3000', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  })
+);
 app.use(express.json())
 
 // Calling Routes

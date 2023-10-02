@@ -31,7 +31,7 @@ const roomSchema = mongoose.Schema({
       },
       prepayreq: {
             type: String,
-            required: true
+            required: false
       },
       imageUrls: [],
       currentBookings: [],

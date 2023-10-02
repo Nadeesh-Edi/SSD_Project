@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateTokens.js'
 import User from '../models/userModel.js'
-
+import { validationResult } from 'express-validator';
 
 
 //User Login
@@ -28,6 +28,7 @@ const authUser = asyncHandler(async(req, res) => {
    }
 
 })
+
 
 //User Registration 
 const registerUser = asyncHandler(async(req, res) => {
@@ -60,13 +61,11 @@ const registerUser = asyncHandler(async(req, res) => {
         email: user.email,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
-       })
-   } else {
-       res.status(400)
-       throw new Error('Invalid user data')
-   }
-
-})
+      });
+    } else {
+      res.status(500).json({ message: 'Error creating user' });
+    }
+  });
 
 
 // get user profile
