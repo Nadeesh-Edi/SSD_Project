@@ -35,6 +35,13 @@ const registerUser = asyncHandler(async(req, res) => {
     res.setHeader('Content-Security-Policy', "default-src 'self'");
     const { name, nic, gender, contactNo, email, password } = req.body
 
+    // Validate user input
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() });
+    return;
+  }
+
    const userExists = await User.findOne({ email })
 
    if(userExists) {
