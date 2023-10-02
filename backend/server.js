@@ -5,9 +5,9 @@ import connectDB from './config/db.js'
 import cors from 'cors'
 import path from 'path'
 
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import xss from 'xss-clean';
-import * as mongoSanitize from 'express-mongo-sanitize';
+import mongoSanitize from 'express-mongo-sanitize';
 
 // Routes
 import userRoutes from './routes/userRoutes.js'
@@ -30,7 +30,14 @@ app.use(xss());
 // Use express-mongo-sanitize middleware to sanitize user input for MongoDB
 app.use(mongoSanitize());
 
-app.use(cors())
+// Configure CORS to allow requests only from trusted domains
+app.use(
+  cors({
+    origin: 'http://localhost:3000', 
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  })
+);
 app.use(express.json())
 
 // Calling Routes
