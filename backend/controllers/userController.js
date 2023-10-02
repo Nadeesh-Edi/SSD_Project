@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateTokens.js'
 import User from '../models/userModel.js'
-
+import { validationResult } from 'express-validator';
 
 
 //User Login
@@ -28,28 +28,36 @@ const authUser = asyncHandler(async(req, res) => {
 
 })
 
-//User Registration 
-const registerUser = asyncHandler(async(req, res) => {
-    const { name, nic, gender, contactNo, email, password } = req.body
-
-   const userExists = await User.findOne({ email })
-
-   if(userExists) {
-       res.status(400)
-       throw new Error('User already exists')
-   }
-
-   const user = await User.create({
-       name,
-       nic,
-       gender,
-       contactNo,
-       email,
-       password
-   })
-
-   if(user) {
-       res.status(201).json({
+const registerUser = asyncHandler(async (req, res) => {
+    const { name, nic, gender, contactNo, email, password } = req.body;
+  
+    // Validate user input
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+  
+    // Check if the user already exists
+    const userExists = await User.findOne({ email });
+  
+    if (userExists) {
+      res.status(400).json({ message: 'User already exists' });
+      return;
+    }
+  
+    // Create a new user
+    const user = await User.create({
+      name,
+      nic,
+      gender,
+      contactNo,
+      email,
+      password,
+    });
+  
+    if (user) {
+      res.status(201).json({
         _id: user._id,
         name: user.name,
         nic: user.nic,
@@ -58,13 +66,11 @@ const registerUser = asyncHandler(async(req, res) => {
         email: user.email,
         isAdmin: user.isAdmin,
         token: generateToken(user._id),
-       })
-   } else {
-       res.status(400)
-       throw new Error('Invalid user data')
-   }
-
-})
+      });
+    } else {
+      res.status(500).json({ message: 'Error creating user' });
+    }
+  });
 
 
 // get user profile
