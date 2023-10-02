@@ -22,7 +22,25 @@ connectDB()
 const app = express()
 
 // Use helmet middleware to set security headers
-app.use(helmet());
+// Add CSP middleware
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"]
+    },
+  })
+);
+
+app.use(function (req, res, next) {
+  res.setHeader(
+    'Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; frame-src 'self'"
+  );
+  // Anti clickjack error
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+  
+  next();
+});
 
 // Use xss-clean middleware to sanitize user input
 app.use(xss());

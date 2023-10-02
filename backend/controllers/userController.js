@@ -6,6 +6,7 @@ import { validationResult } from 'express-validator';
 
 //User Login
 const authUser = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
     const { email, password } = req.body
 
    const user = await User.findOne({ email })
@@ -28,36 +29,30 @@ const authUser = asyncHandler(async(req, res) => {
 
 })
 
-const registerUser = asyncHandler(async (req, res) => {
-    const { name, nic, gender, contactNo, email, password } = req.body;
-  
-    // Validate user input
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
-      return;
-    }
-  
-    // Check if the user already exists
-    const userExists = await User.findOne({ email });
-  
-    if (userExists) {
-      res.status(400).json({ message: 'User already exists' });
-      return;
-    }
-  
-    // Create a new user
-    const user = await User.create({
-      name,
-      nic,
-      gender,
-      contactNo,
-      email,
-      password,
-    });
-  
-    if (user) {
-      res.status(201).json({
+
+//User Registration 
+const registerUser = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
+    const { name, nic, gender, contactNo, email, password } = req.body
+
+   const userExists = await User.findOne({ email })
+
+   if(userExists) {
+       res.status(400)
+       throw new Error('User already exists')
+   }
+
+   const user = await User.create({
+       name,
+       nic,
+       gender,
+       contactNo,
+       email,
+       password
+   })
+
+   if(user) {
+       res.status(201).json({
         _id: user._id,
         name: user.name,
         nic: user.nic,
@@ -75,6 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // get user profile
 const getUserProfile = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
    const user = await User.findById(req.user._id)
 
    if(user){

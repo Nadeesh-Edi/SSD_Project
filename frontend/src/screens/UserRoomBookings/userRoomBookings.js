@@ -16,11 +16,16 @@ const UserRoomBookimgs = () => {
   useEffect(async () => {
     try {
       setloading(true)
-      const data = await (
+      var data;
         await axios.post('/api/booking/userBookings', {
           userid: JSON.parse(localStorage.getItem('userInfo'))._id,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem("userInfo")).token}`
+          }
+        }).then(res => {
+          data = res.data;
         })
-      ).data
       setmybookings(data)
       setloading(false)
     } catch (error) {

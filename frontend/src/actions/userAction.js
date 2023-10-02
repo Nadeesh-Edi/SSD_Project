@@ -12,6 +12,7 @@ import {
       USER_REGISTER_FAIL,
       
 } from '../constants/userConstants'
+import crypto from 'crypto-js';
 
 
 //User & Admin Login
@@ -29,7 +30,7 @@ export const login = (email, password) => async (dispatch) => {
 
           const user = {
                 email: email,
-                password: password
+                password: crypto.MD5(password).toString()
           }
 
           console.log(user);
@@ -120,7 +121,7 @@ export const register = (name, nic, gender, contactNo, email, password, isAdmin)
                 gender: gender,
                 contactNo: contactNo,
                 email: email,
-                password: password,
+                password: crypto.MD5(password).toString(),
                 isAdmin: isAdmin
           }
 
