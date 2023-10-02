@@ -6,7 +6,15 @@ export const listBookings = () => async (dispatch) => {
             dispatch({
                   type: BOOKING_LIST_REQUEST,
             })
-            const { data } = await axios.get(`/api/booking/allBookings`)
+
+            const config = {
+                  headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${JSON.parse(localStorage.getItem("userInfo")).token}`,
+                  },
+            }
+
+            const { data } = await axios.get(`/api/booking/allBookings`, config)
 
             dispatch({
                   type: BOOKING_LIST_SUCCESS,
