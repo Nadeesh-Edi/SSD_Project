@@ -6,6 +6,7 @@ import User from '../models/userModel.js'
 
 //User Login
 const authUser = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
     const { email, password } = req.body
 
    const user = await User.findOne({ email })
@@ -30,6 +31,7 @@ const authUser = asyncHandler(async(req, res) => {
 
 //User Registration 
 const registerUser = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
     const { name, nic, gender, contactNo, email, password } = req.body
 
    const userExists = await User.findOne({ email })
@@ -69,6 +71,7 @@ const registerUser = asyncHandler(async(req, res) => {
 
 // get user profile
 const getUserProfile = asyncHandler(async(req, res) => {
+    res.setHeader('Content-Security-Policy', "default-src 'self'");
    const user = await User.findById(req.user._id)
 
    if(user){

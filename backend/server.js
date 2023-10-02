@@ -5,9 +5,9 @@ import connectDB from './config/db.js'
 import cors from 'cors'
 import path from 'path'
 
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 import xss from 'xss-clean';
-import * as mongoSanitize from 'express-mongo-sanitize';
+import mongoSanitize from 'express-mongo-sanitize';
 
 // Routes
 import userRoutes from './routes/userRoutes.js'
@@ -22,7 +22,25 @@ connectDB()
 const app = express()
 
 // Use helmet middleware to set security headers
-app.use(helmet());
+// Add CSP middleware
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"]
+    },
+  })
+);
+
+app.use(function (req, res, next) {
+  res.setHeader(
+    'Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; frame-src 'self'"
+  );
+  // Anti clickjack error
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'none'");
+  
+  next();
+});
 
 // Use xss-clean middleware to sanitize user input
 app.use(xss());
