@@ -1,10 +1,10 @@
 # SSD_Project
 
 ## Member names and Registration numbers
-IT20012724 - Ananda R.S.R.G.J.N
-IT20005108 - Edirisooriya N.W
-IT20090562 - Nagahawatta S.S
-IT20152482 – Kottawa K.I.J.O
+#IT20012724 - Ananda R.S.R.G.J.N
+#IT20005108 - Edirisooriya N.W
+#IT20090562 - Nagahawatta S.S
+#IT20152482 – Kottawa K.I.J.O
 
 ## Github link to original project
 https://github.com/vPankaja/WSO2-EI
