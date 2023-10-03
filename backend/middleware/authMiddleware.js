@@ -1,10 +1,15 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import admin from "firebase-admin"
+import serviceAccount from "../config/carlton-74b62-firebase-adminsdk-myt0t-6dee815e91.json" assert { type: "json" };
 
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 
 const protect = asyncHandler(async(req, res, next) => {
-    let token
+    let token;
 
     if(
         req.headers.authorization && 
@@ -12,8 +17,21 @@ const protect = asyncHandler(async(req, res, next) => {
     ) {
         try{
             token = req.headers.authorization.split(' ')[1]
-            const decode = jwt.verify(token, process.env.JWT_SECRET)
-            req.user = await User.findById(decode.id).select('-password')
+
+            let decodedToken = await admin.auth().verifyIdToken(token);
+
+            const userFromDb = await User.findOne({
+                email: decodedToken.email
+            }).select('-password')
+
+            req.user = {
+                ...decodedToken,
+                _id: userFromDb._id
+            }
+            next();
+
+            //const decode = jwt.verify(token, process.env.JWT_SECRET)
+            //req.user = await User.findById(decode.id).select('-password')
         } catch (error) {
             console.error(error)
             res.status(401)
@@ -26,10 +44,9 @@ const protect = asyncHandler(async(req, res, next) => {
         throw new Error ('Not authorized, no token')
     }
 
-    next()
-
 })
 
+/*
 const admin = (req, res, next) => {
     if(req.user && req.user.isAdmin){
         next()
@@ -38,6 +55,7 @@ const admin = (req, res, next) => {
         throw new Error('Not authorized as an admin')
     }
 }
+*/
 
 
-export{ protect, admin }
+export{ protect }

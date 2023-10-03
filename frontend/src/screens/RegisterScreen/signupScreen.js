@@ -7,6 +7,8 @@ import { register } from '../../actions/userAction.js'
 import Message from '../../components/Message.js'
 import Loader from '../../components/Loader.js'
 import Navbar from '../../components/Navbar/navbar.js'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../firebase'
 
 
 const SignupScreen = ({ location, history }) => {
@@ -35,13 +37,20 @@ const SignupScreen = ({ location, history }) => {
 
       }, [history, userInfo, redirect])
 
-      const submitHandler = (e) => {
+      const submitHandler = async (e) => {
             e.preventDefault()
-            if (password !== confirmPassword) {
-                  setMessage('Password do not match')
-            }
-            else {
-                  dispatch(register(name, nic, gender, contactNo, email, password))
+            try {
+                  if (password !== confirmPassword) {
+                        setMessage('Password do not match')
+                  }
+                  else {
+                        let result = await createUserWithEmailAndPassword(auth, email, password);
+                        if(result.user?.uid){
+                              dispatch(register(name, nic, gender, contactNo, email, password))
+                        }
+                  }
+            } catch (err) {
+                  console.error(err);
             }
       }
 

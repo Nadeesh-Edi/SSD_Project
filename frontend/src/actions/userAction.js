@@ -33,8 +33,6 @@ export const login = (email, password) => async (dispatch) => {
                 password: crypto.MD5(password).toString()
           }
 
-          console.log(user);
-
           const { data } = await axios.post('/api/users/login', user, config)
 
           dispatch({
@@ -77,10 +75,12 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
                   userLogin: { userInfo },
             } = getState()
 
+            
+            let idToken = await auth?.currentUser.getIdToken(true);
             const config = {
                   headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${userInfo.token}`,
+                        Authorization: `Bearer ${idToken}`,
                   },
             }
 

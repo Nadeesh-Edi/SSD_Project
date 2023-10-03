@@ -6,6 +6,8 @@ import Message from '../../components/Message'
 import Loader from '../../components/Loader'
 import { login } from '../../actions/userAction'
 import { Row, Col } from 'react-bootstrap'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../firebase'
 
 
 const LoginScreen = ({ location, history }) => {
@@ -26,9 +28,17 @@ const LoginScreen = ({ location, history }) => {
 
       }, [history, userInfo, redirect])
      
-      const submitHandler = (e) => {
+      const submitHandler = async (e) => {
             e.preventDefault()
-            dispatch(login(email, password))
+            try {
+                  let result = await signInWithEmailAndPassword(auth, email, password);
+                  if(result.user?.uid){
+                        console.log(result.user);
+                        dispatch(login(email, password))
+                  }
+            } catch (err) {
+                  console.error(err);
+            }
       }
 
 

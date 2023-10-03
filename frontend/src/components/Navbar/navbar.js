@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom'
 import logo from '../Navbar/hotellogo.png'
 import '../Navbar/nav.css'
 import Swal from 'sweetalert2'
+import { auth } from '../../firebase.js'
+import { signOut } from 'firebase/auth'
 
 const Navbar = (history) => {
 
@@ -15,7 +17,8 @@ const Navbar = (history) => {
       const userLogin = useSelector(state => state.userLogin)
       const { userInfo } = userLogin
 
-      const logoutHandler = () => {
+      const logoutHandler = async () => {
+            await signOut(auth);
             dispatch(logout())
             Swal.fire('Successful', 'Successfully Logged Out ', 'success').then(result => {
                   window.location.href = '/login'
