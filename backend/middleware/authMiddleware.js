@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
 import admin from "firebase-admin"
-import serviceAccount from "../config/carlton-74b62-firebase-adminsdk-myt0t-6dee815e91.json" assert { type: "json" };
+import serviceAccount from "../config/carlton-firebase-configs.js";
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
