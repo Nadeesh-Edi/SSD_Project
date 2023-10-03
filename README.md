@@ -1,9 +1,9 @@
 # SSD_Project
 
 ## Member names and Registration numbers
-IT20012724 - Ananda R.S.R.G.J.N__
-IT20005108 - Edirisooriya N.W__
-IT20090562 - Nagahawatta S.S__
+IT20012724 - Ananda R.S.R.G.J.N <br/>
+IT20005108 - Edirisooriya N.W <br/>
+IT20090562 - Nagahawatta S.S <br/>
 IT20152482 – Kottawa K.I.J.O
 
 ## Github link to original project
